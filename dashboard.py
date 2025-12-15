@@ -18,7 +18,7 @@ else:
 st.set_page_config(
     page_title="Monitoreo de Spots",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed" # <--- Barra lateral oculta al inicio
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -64,9 +64,9 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (FIX HOVER BLANCO) --- */
+    /* --- CSS LOGIN (FIX DEFINITIVO HOVER) --- */
     
-    /* 1. Títulos FUERA de la tarjeta */
+    /* 1. Títulos */
     .login-header {
         font-size: 3rem;
         font-weight: 800;
@@ -84,7 +84,7 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* 2. LA TARJETA BLANCA */
+    /* 2. TARJETA BLANCA */
     div[data-testid="stForm"] {
         background-color: #ffffff !important;
         padding: 40px;
@@ -93,7 +93,7 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. Textos dentro del form (Negros) */
+    /* 3. Textos Negros */
     div[data-testid="stForm"] label p, 
     div[data-testid="stForm"] h3,
     div[data-testid="stForm"] .stMarkdown p {
@@ -120,44 +120,46 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL - SOLUCIÓN "GHOST" */
+    /* 6. BOTÓN PRINCIPAL - SOLUCIÓN NUCLEAR PARA EL HOVER */
     
-    /* Estado NORMAL */
+    /* ESTADO NORMAL */
     div[data-testid="stForm"] .stButton > button {
-        background-color: #2563eb !important;
-        border: 1px solid #2563eb !important; /* Borde forzado */
-        color: #ffffff !important;
+        background-color: #2563eb !important; /* Azul */
+        border: 1px solid #2563eb !important;
+        color: #ffffff !important; /* Texto Blanco */
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        transition: none !important; /* Elimina animaciones raras */
     }
-    
-    /* Estado HOVER (Pasar el mouse) - FORZADO */
+
+    /* ESTADO HOVER (Ratón encima) - FORZAMOS LOS COLORES */
     div[data-testid="stForm"] .stButton > button:hover {
-        background-color: #1d4ed8 !important; /* Azul más oscuro */
+        background-color: #1d4ed8 !important; /* Azul un poco más oscuro */
         border-color: #1d4ed8 !important;
-        color: #ffffff !important; /* Texto sigue blanco */
+        color: #ffffff !important; /* MANTENER TEXTO BLANCO */
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
-    /* Estado ACTIVE (Clic) */
-    div[data-testid="stForm"] .stButton > button:active {
+    /* ESTADO FOCUS/ACTIVE (Clic) */
+    div[data-testid="stForm"] .stButton > button:active,
+    div[data-testid="stForm"] .stButton > button:focus {
         background-color: #1e40af !important;
+        border-color: #1e40af !important;
         color: #ffffff !important;
+        box-shadow: none !important;
     }
 
-    /* FORZAR TEXTO INTERNO DEL BOTÓN (Párrafo) */
-    /* Esto asegura que el texto "Ingresar al Sistema" sea blanco siempre */
+    /* FORZAR TEXTO INTERNO DEL BOTÓN (El <p> dentro del botón) */
     div[data-testid="stForm"] .stButton > button p {
         color: #ffffff !important;
     }
+    /* Asegurar que al pasar el mouse el texto SIGA siendo blanco */
     div[data-testid="stForm"] .stButton > button:hover p {
         color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - LIMPIO */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
@@ -170,7 +172,6 @@ st.markdown("""
     div[data-baseweb="input"] button svg {
         fill: #6b7280 !important;
     }
-    /* Evitar que el ojo se ponga blanco en hover */
     div[data-baseweb="input"] button:hover {
         background-color: transparent !important;
         color: #111827 !important; 
@@ -383,8 +384,10 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- COLUMNAS (Texto: 2.2, Audio: 1.5) ---
-cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
+# --- COLUMNAS (Ajuste Equilibrado) ---
+# Texto (Index 6): 2.0 (Espacio cómodo para leer)
+# Audio (Index 7): 1.5 (Espacio suficiente para el player)
+cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.0, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
 ancho_boton = cols_width[8] + 0.5 
