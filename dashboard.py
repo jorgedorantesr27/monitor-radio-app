@@ -16,7 +16,7 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 st.set_page_config(
-    page_title="Monitoreo de Spots",
+    page_title="MONITOREO DE SPOTS",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -417,7 +417,7 @@ with c_feed_b:
         use_container_width=True
     )
 
-headers = ["📅 Fecha", "⏰ Hora", "🏙️ Ciudad", "📡 Estación", "🎙️ Programa", "🏷️ Spot", "📝 Texto", "▶️ Audio", "🔗"]
+headers = ["Fecha", "Hora", "Ciudad", "Estación", "Programa", "Spot", "Texto", "Audio", "🔗"]
 h_cols = st.columns(cols_width)
 for i, h in enumerate(headers):
     h_cols[i].markdown(f"**{h}**")
