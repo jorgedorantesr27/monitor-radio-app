@@ -18,7 +18,7 @@ else:
 st.set_page_config(
     page_title="Monitoreo de Spots",
     layout="wide",
-    initial_sidebar_state="collapsed"  # <--- CAMBIO: Sidebar oculta al inicio
+    initial_sidebar_state="collapsed"
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (V20 - FIX HOVER) --- */
+    /* --- CSS LOGIN (FIX HOVER BLANCO) --- */
     
     /* 1. Títulos FUERA de la tarjeta */
     .login-header {
@@ -93,14 +93,14 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. TEXTOS NEGROS (Solución Selectiva) */
+    /* 3. Textos dentro del form (Negros) */
     div[data-testid="stForm"] label p, 
     div[data-testid="stForm"] h3,
     div[data-testid="stForm"] .stMarkdown p {
         color: #111827 !important;
     }
 
-    /* 4. ARREGLO DEL INPUT PASSWORD */
+    /* 4. Ocultar "Press Enter" */
     div[data-testid="InputInstructions"] {
         display: none !important;
     }
@@ -120,45 +120,44 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL (INGRESAR) - ESTADOS DE MOUSE */
+    /* 6. BOTÓN PRINCIPAL - SOLUCIÓN "GHOST" */
     
     /* Estado NORMAL */
     div[data-testid="stForm"] .stButton > button {
-        background-color: #2563eb !important; /* Azul */
-        border: none !important;
+        background-color: #2563eb !important;
+        border: 1px solid #2563eb !important; /* Borde forzado */
+        color: #ffffff !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        color: #ffffff !important;
-    }
-    div[data-testid="stForm"] .stButton > button p {
-        color: #ffffff !important; 
-        font-weight: 600 !important;
-        font-size: 16px !important;
+        transition: none !important; /* Elimina animaciones raras */
     }
     
-    /* Estado HOVER (Pasar mouse) - SOLUCIÓN AQUÍ */
+    /* Estado HOVER (Pasar el mouse) - FORZADO */
     div[data-testid="stForm"] .stButton > button:hover {
         background-color: #1d4ed8 !important; /* Azul más oscuro */
-        border: none !important;
-        color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important; /* Texto sigue blanco */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    /* Forzamos el texto a blanco también en hover */
+    
+    /* Estado ACTIVE (Clic) */
+    div[data-testid="stForm"] .stButton > button:active {
+        background-color: #1e40af !important;
+        color: #ffffff !important;
+    }
+
+    /* FORZAR TEXTO INTERNO DEL BOTÓN (Párrafo) */
+    /* Esto asegura que el texto "Ingresar al Sistema" sea blanco siempre */
+    div[data-testid="stForm"] .stButton > button p {
+        color: #ffffff !important;
+    }
     div[data-testid="stForm"] .stButton > button:hover p {
         color: #ffffff !important;
     }
 
-    /* Estado ACTIVE (Clic) */
-    div[data-testid="stForm"] .stButton > button:active, 
-    div[data-testid="stForm"] .stButton > button:focus {
-        background-color: #1e40af !important; /* Azul muy oscuro */
-        color: #ffffff !important;
-        border: none !important;
-    }
-
-    /* 7. BOTÓN "VER CONTRASEÑA" */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - LIMPIO */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
@@ -170,6 +169,11 @@ st.markdown("""
     }
     div[data-baseweb="input"] button svg {
         fill: #6b7280 !important;
+    }
+    /* Evitar que el ojo se ponga blanco en hover */
+    div[data-baseweb="input"] button:hover {
+        background-color: transparent !important;
+        color: #111827 !important; 
     }
 
     .login-footer {
@@ -379,6 +383,7 @@ if busqueda_texto:
 else:
     df_tabla = df
 
+# --- COLUMNAS (Texto: 2.2, Audio: 1.5) ---
 cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
