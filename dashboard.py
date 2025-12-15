@@ -64,16 +64,9 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (FIX DEFINITIVO) --- */
+    /* --- CSS LOGIN (FIX BOTÓN OJO) --- */
     
-    /* 1. Fondo general del login (Opcional, para dar contexto si el usuario usa dark mode) */
-    .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* 2. Títulos FUERA de la tarjeta (Blancos para contrastar con el fondo oscuro de la app) */
+    /* 1. Títulos FUERA de la tarjeta */
     .login-header {
         font-size: 3rem;
         font-weight: 800;
@@ -91,28 +84,26 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* 3. LA TARJETA BLANCA (Forzada) */
+    /* 2. LA TARJETA BLANCA */
     div[data-testid="stForm"] {
-        background-color: #ffffff !important; /* Blanco puro */
+        background-color: #ffffff !important;
         padding: 40px;
         border-radius: 12px;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         border: 1px solid #e5e7eb;
     }
 
-    /* 4. TEXTOS DENTRO DE LA TARJETA (NEGROS) */
-    /* Forzamos a negro todas las etiquetas, títulos y párrafos dentro del form */
+    /* 3. Textos generales dentro de la tarjeta (Negro) */
     div[data-testid="stForm"] * {
-        color: #111827 !important; /* Negro casi puro */
+        color: #111827 !important;
     }
 
-    /* 5. ARREGLO DEL INPUT (Texto encimado) */
-    /* Esto OCULTA el texto "Press Enter to submit" para que no choque con el ojo */
+    /* 4. ARREGLO DEL INPUT PASSWORD */
     div[data-testid="InputInstructions"] {
-        display: none !important;
+        display: none !important; /* Oculta "Press Enter to submit" */
     }
     
-    /* 6. ESTILO DE LOS CAMPOS (INPUTS) */
+    /* 5. Inputs */
     div[data-baseweb="input"] {
         background-color: #ffffff !important;
         border: 1px solid #d1d5db !important;
@@ -122,30 +113,48 @@ st.markdown("""
         background-color: #ffffff !important;
         color: #000000 !important;
     }
-    /* Texto que escribe el usuario */
     input[type="text"], input[type="password"] {
         color: #000000 !important;
         caret-color: #000000 !important;
     }
 
-    /* 7. BOTÓN */
-    div[data-testid="stForm"] button {
-        background-color: #2563eb !important; /* Azul */
+    /* 6. BOTÓN PRINCIPAL (INGRESAR) - Azul y Grande */
+    div[data-testid="stForm"] > button {
+        background-color: #2563eb !important;
         border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
+        width: 100%;
     }
-    /* Texto del botón (Blanco) - Sobrescribe la regla 4 */
-    div[data-testid="stForm"] button p {
+    div[data-testid="stForm"] > button p {
         color: #ffffff !important;
         font-weight: 600 !important;
         font-size: 16px !important;
     }
-    div[data-testid="stForm"] button:hover {
+    div[data-testid="stForm"] > button:hover {
         background-color: #1d4ed8 !important;
     }
-    
+
+    /* 7. REPARACIÓN DEL BOTÓN "VER CONTRASEÑA" (OJO) */
+    /* Esto es lo nuevo: Le quitamos el estilo azul para que se vea normal */
+    div[data-baseweb="input"] button {
+        background-color: transparent !important;
+        border: none !important;
+        color: #6b7280 !important; /* Gris oscuro para el ícono */
+        margin-top: 0 !important;
+        padding: 0 10px !important;
+        width: auto !important;
+        box-shadow: none !important;
+    }
+    div[data-baseweb="input"] button:hover {
+        background-color: transparent !important;
+        color: #111827 !important; /* Negro al pasar el mouse */
+    }
+    div[data-baseweb="input"] svg {
+        fill: #6b7280 !important;
+    }
+
     .login-footer {
         text-align: center;
         color: #9ca3af;
@@ -157,25 +166,22 @@ st.markdown("""
 
 # --- 4. LOGIN ---
 def mostrar_login():
-    # Centrado usando columnas
     c1, c2, c3 = st.columns([1, 0.8, 1])
     
     with c2:
         st.markdown("<br><br>", unsafe_allow_html=True)
         
-        # Títulos
-        st.markdown("<div class='login-header'>Monitor Radio</div>", unsafe_allow_html=True)
+        st.markdown("<div class='login-header'>Monitoreo de Spots</div>", unsafe_allow_html=True)
         st.markdown("<div class='login-sub'>Intelligence Dashboard</div>", unsafe_allow_html=True)
         
-        # Tarjeta de Login
         with st.form("login_form"):
-            st.markdown("### Acceso de Clientes")
+            # CAMBIO DE TEXTO AQUÍ
+            st.markdown("### Acceso a Cliente")
             st.caption("Ingresa tus credenciales para continuar")
             
             st.markdown("<br>", unsafe_allow_html=True)
             
             usuario = st.text_input("Usuario", placeholder="Usuario asignado")
-            # El input de contraseña ya no tendrá el texto encimado gracias al CSS
             password = st.text_input("Contraseña", type="password", placeholder="••••••••")
             
             st.markdown("<br>", unsafe_allow_html=True)
@@ -382,7 +388,7 @@ with c_feed_b:
         use_container_width=True
     )
 
-headers = ["📅 Fecha", "⏰ Hora", "🏙️ Ciudad", "📡 Estación", "🎙️ Programa", "🏷️ Spot", "📝 Texto", "▶️ Audio", "🔗"]
+headers = ["Fecha", "Hora", "Ciudad", "Estación", "Programa", "Spot", "Texto", "Audio", "🔗"]
 h_cols = st.columns(cols_width)
 for i, h in enumerate(headers):
     h_cols[i].markdown(f"**{h}**")
