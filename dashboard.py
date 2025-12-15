@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (BOTÓN ESTÁTICO) --- */
+    /* --- CSS LOGIN (BOTÓN INMUTABLE) --- */
     
     /* 1. Títulos */
     .login-header {
@@ -120,47 +120,59 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL - ESTILO ÚNICO Y FIJO */
-    /* Aplicamos el mismo estilo para normal, hover, active y focus */
+    /* 6. BOTÓN PRINCIPAL - ESTADO ABSOLUTO */
+    /* Apuntamos al botón directo dentro del formulario */
     
-    div[data-testid="stForm"] .stButton > button,
-    div[data-testid="stForm"] .stButton > button:hover,
-    div[data-testid="stForm"] .stButton > button:active,
-    div[data-testid="stForm"] .stButton > button:focus {
-        background-color: #2563eb !important; /* AZUL SIEMPRE */
-        border: none !important;
-        color: #ffffff !important; /* TEXTO BLANCO SIEMPRE */
+    div[data-testid="stForm"] button {
+        background-color: #2563eb !important; /* Azul Fijo */
+        color: #ffffff !important;            /* Texto Blanco Fijo */
+        border: 1px solid #2563eb !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        box-shadow: none !important; /* Sin sombras */
-        transition: none !important; /* Sin animaciones */
+        transition: none !important;          /* Sin animaciones */
+        box-shadow: none !important;          /* Sin sombras raras */
+    }
+
+    /* BLOQUEAR CAMBIOS AL PASAR EL MOUSE (HOVER) */
+    div[data-testid="stForm"] button:hover {
+        background-color: #2563eb !important; /* Se queda igual */
+        color: #ffffff !important;            /* Se queda igual */
+        border-color: #2563eb !important;
+    }
+
+    /* BLOQUEAR CAMBIOS AL HACER CLIC (ACTIVE/FOCUS) */
+    div[data-testid="stForm"] button:active,
+    div[data-testid="stForm"] button:focus {
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+        border-color: #2563eb !important;
         outline: none !important;
     }
 
-    /* Asegurar texto interno blanco siempre */
-    div[data-testid="stForm"] .stButton > button p,
-    div[data-testid="stForm"] .stButton > button:hover p {
+    /* FORZAR TEXTO INTERNO BLANCO SIEMPRE */
+    div[data-testid="stForm"] button p {
+        color: #ffffff !important;
+    }
+    div[data-testid="stForm"] button:hover p {
         color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - EL ÚNICO QUE PUEDE SER TRANSPARENTE */
+    /* Usamos selectores muy específicos para no afectar al botón principal */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
-        color: #6b7280 !important;
         margin-top: 0 !important;
-        padding: 0 10px !important;
         width: auto !important;
-        box-shadow: none !important;
-    }
-    div[data-baseweb="input"] button svg {
-        fill: #6b7280 !important;
+        padding: 0 10px !important;
     }
     div[data-baseweb="input"] button:hover {
         background-color: transparent !important;
-        color: #111827 !important; 
+    }
+    div[data-baseweb="input"] button svg {
+        fill: #6b7280 !important;
     }
 
     .login-footer {
