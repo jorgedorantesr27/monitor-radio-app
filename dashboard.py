@@ -17,9 +17,9 @@ else:
 
 st.set_page_config(
     page_title="Monitor Radio Intelligence",
-    page_icon="📻",
+    # page_icon="📻",  <-- SE ELIMINÓ EL EMOJI
     layout="wide",
-    initial_sidebar_state="collapsed" # Colapsado por defecto para el login
+    initial_sidebar_state="expanded"
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -40,10 +40,9 @@ if 'logueado' not in st.session_state:
 if 'usuario_actual' not in st.session_state:
     st.session_state['usuario_actual'] = None
 
-# --- 3. ESTILOS CSS PROFESIONALES ---
+# --- 3. ESTILOS CSS ---
 st.markdown("""
     <style>
-    /* 1. Estilos Generales de la App */
     .badge-freq {
         background-color: #e6f3ff;
         color: #0068c9;
@@ -57,46 +56,45 @@ st.markdown("""
         color: #d93025;
         font-weight: 600;
     }
+    div[data-testid="stSidebar"] button {
+        width: 100%;
+    }
     .streamlit-expanderHeader {
         font-size: 0.9em;
         padding: 0px !important;
     }
-    div[data-testid="stSidebar"] button {
-        width: 100%;
-    }
-
-    /* 2. ESTILOS EXCLUSIVOS DEL LOGIN */
-    /* Ocultar elementos extraños durante el login si se desea un look limpio */
+    
+    /* --- ESTILOS DEL LOGIN --- */
+    /* Títulos del login en color claro para que se vean en modo oscuro */
     .login-header {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #1f2937;
+        color: #ffffff; /* Color blanco para el texto principal */
         text-align: center;
         margin-bottom: 0.5rem;
     }
     .login-sub {
         font-size: 1rem;
-        color: #6b7280;
+        color: #d1d5db; /* Color gris claro para el subtítulo */
         text-align: center;
         margin-bottom: 2rem;
     }
-    
-    /* Contenedor simulado de tarjeta */
+    /* Contenedor del formulario (tarjeta blanca) */
     div[data-testid="stForm"] {
         background-color: white;
         padding: 3rem;
         border-radius: 15px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         border: 1px solid #e5e7eb;
+        color: #1f2937; /* Asegura que el texto dentro del formulario sea oscuro */
     }
-    
     /* Inputs más bonitos */
     div[data-baseweb="input"] > div {
         border-radius: 8px !important;
         background-color: #f9fafb !important;
+        color: #1f2937 !important;
     }
-    
-    /* Botón de Entrar más atractivo */
+    /* Botón de Entrar */
     div[data-testid="stForm"] button {
         background-color: #2563eb !important;
         color: white !important;
@@ -111,24 +109,30 @@ st.markdown("""
         background-color: #1d4ed8 !important;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
+    /* Pie de página */
+    .login-footer {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.8em;
+        margin-top: 20px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIN MEJORADO (CON DISEÑO) ---
+# --- 4. LOGIN ---
 def mostrar_login():
-    # Usamos columnas para centrar la tarjeta
-    # [1, 0.8, 1] significa que la columna del medio es más estrecha (tipo móvil/tarjeta)
-    col1, col2, col3 = st.columns([1, 0.8, 1])
+    c1, c2, c3 = st.columns([1, 0.8, 1])
     
-    with col2:
-        st.markdown("<br><br><br>", unsafe_allow_html=True) # Espacio superior
+    with c2:
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
         
-        # Encabezado fuera del formulario
-        st.markdown("<div class='login-header'>📻 Monitor Radio</div>", unsafe_allow_html=True)
+        # Encabezado fuera del formulario (con colores claros)
+        st.markdown("<div class='login-header'>Monitor Radio</div>", unsafe_allow_html=True)
         st.markdown("<div class='login-sub'>Intelligence Dashboard</div>", unsafe_allow_html=True)
         
-        # Formulario encapsulado (Permite dar Enter para enviar)
+        # Formulario encapsulado
         with st.form("login_form"):
+            # Título dentro del formulario (se verá oscuro sobre fondo blanco)
             st.markdown("##### Acceso de Clientes")
             usuario = st.text_input("Usuario", placeholder="Ingresa tu usuario")
             password = st.text_input("Contraseña", type="password", placeholder="••••••••")
@@ -149,19 +153,14 @@ def mostrar_login():
                     st.error("❌ Usuario o contraseña incorrectos")
 
         # Pie de página discreto
-        st.markdown("""
-            <div style='text-align: center; color: #9ca3af; font-size: 0.8em; margin-top: 20px;'>
-                &copy; 2025 Media Intelligence System
-            </div>
-        """, unsafe_allow_html=True)
+        st.markdown("<div class='login-footer'>&copy; 2025 Media Intelligence System</div>", unsafe_allow_html=True)
 
 if not st.session_state['logueado']:
     mostrar_login()
     st.stop()
 
 # ==============================================================================
-# A PARTIR DE AQUÍ, TODO ES IGUAL A LA VERSIÓN ANTERIOR
-# (Lógica de datos, Dashboard, Tablas, etc.)
+# A PARTIR DE AQUÍ, EL RESTO DE TU CÓDIGO PERMANECE EXACTAMENTE IGUAL
 # ==============================================================================
 
 # --- 5. LÓGICA DE DATOS ---
@@ -169,8 +168,10 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=10)
 def cargar_datos():
+    # ---------------------------------------------------------
     # ⚠️ TU ENLACE REAL
     url_hoja = "https://docs.google.com/spreadsheets/d/1ZCwGhzMl8TLQlDzg4AFMfni50rShkfhALqQkLWzK454/edit?gid=0#gid=0"
+    # ---------------------------------------------------------
     try:
         data = conn.read(spreadsheet=url_hoja, worksheet=0)
         data.columns = data.columns.str.strip()
@@ -219,12 +220,15 @@ permisos = PERMISOS.get(usuario, [])
 if permisos != "TODOS":
     df_raw = df_raw[df_raw['SPOT'].isin(permisos)]
 
-st.title("📻 Monitor Radio Intelligence")
+# SE ELIMINÓ EL EMOJI DEL TÍTULO PRINCIPAL TAMBIÉN
+st.title("Monitor Radio Intelligence")
 if permisos != "TODOS":
     st.caption(f"Visualizando datos para: {', '.join(permisos)}")
 st.markdown("---")
 
 # --- 8. FILTROS ---
+
+# FILA 1: Fechas y Orden
 c_filtros_1 = st.columns(4)
 min_date_avail = df_raw['FECHA'].min().date() if not df_raw.empty else datetime.date.today()
 max_date_avail = df_raw['FECHA'].max().date() if not df_raw.empty else datetime.date.today()
@@ -238,6 +242,7 @@ with c_filtros_1[2]:
 with c_filtros_1[3]:
     direccion = st.selectbox("Orden", ["Descendente", "Ascendente"])
 
+# FILA 2: Categorías (Estación y Ciudad)
 c_filtros_2 = st.columns(2)
 lista_estaciones = sorted(df_raw['ESTACION'].dropna().unique().tolist()) if not df_raw.empty else []
 lista_ciudades = sorted(df_raw['CIUDAD'].dropna().unique().tolist()) if not df_raw.empty else []
@@ -266,7 +271,7 @@ prog_lider = df['PROGRAMA'].mode()[0] if not df.empty else "-"
 k3.metric("Top Programa", prog_lider)
 st.markdown("---")
 
-# --- 11. GRÁFICAS ---
+# --- 11. GRÁFICAS (CON ETIQUETAS) ---
 if not df.empty:
     st.subheader("📊 Análisis Visual")
     g1, g2 = st.columns([1, 1.5])
