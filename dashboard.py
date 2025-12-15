@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (BOTÓN INMUTABLE) --- */
+    /* --- CSS LOGIN (BOTÓN INTERACTIVO SEGURO) --- */
     
     /* 1. Títulos */
     .login-header {
@@ -120,38 +120,44 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL - ESTADO ABSOLUTO */
-    /* Apuntamos al botón directo dentro del formulario */
+    /* 6. BOTÓN PRINCIPAL - INTERACTIVO PERO SEGURO */
     
+    /* ESTADO NORMAL */
     div[data-testid="stForm"] button {
-        background-color: #2563eb !important; /* Azul Fijo */
-        color: #ffffff !important;            /* Texto Blanco Fijo */
-        border: 1px solid #2563eb !important;
+        background-color: #2563eb !important; /* Azul Base */
+        color: #ffffff !important;            /* Texto Blanco */
+        border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        transition: none !important;          /* Sin animaciones */
-        box-shadow: none !important;          /* Sin sombras raras */
+        transition: all 0.2s ease-in-out !important; /* Transición suave permitida */
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2) !important;
     }
 
-    /* BLOQUEAR CAMBIOS AL PASAR EL MOUSE (HOVER) */
+    /* ESTADO HOVER (Pasar el mouse) - Feedback visual */
     div[data-testid="stForm"] button:hover {
-        background-color: #2563eb !important; /* Se queda igual */
-        color: #ffffff !important;            /* Se queda igual */
-        border-color: #2563eb !important;
+        background-color: #1d4ed8 !important; /* Azul más oscuro */
+        color: #ffffff !important;            /* FORZAR BLANCO */
+        transform: translateY(-2px) !important; /* Se eleva un poco */
+        box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3) !important;
     }
 
-    /* BLOQUEAR CAMBIOS AL HACER CLIC (ACTIVE/FOCUS) */
-    div[data-testid="stForm"] button:active,
+    /* ESTADO ACTIVE (Clic presionado) - Feedback de clic */
+    div[data-testid="stForm"] button:active {
+        background-color: #1e40af !important; /* Azul muy oscuro */
+        color: #ffffff !important;            /* FORZAR BLANCO */
+        transform: translateY(0) !important;    /* Se hunde */
+        box-shadow: none !important;
+    }
+
+    /* ESTADO FOCUS (Teclado) */
     div[data-testid="stForm"] button:focus {
-        background-color: #2563eb !important;
         color: #ffffff !important;
-        border-color: #2563eb !important;
         outline: none !important;
     }
 
-    /* FORZAR TEXTO INTERNO BLANCO SIEMPRE */
+    /* Asegurar texto interno blanco siempre (párrafos dentro del botón) */
     div[data-testid="stForm"] button p {
         color: #ffffff !important;
     }
@@ -159,20 +165,24 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - EL ÚNICO QUE PUEDE SER TRANSPARENTE */
-    /* Usamos selectores muy específicos para no afectar al botón principal */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
+        color: #6b7280 !important;
         margin-top: 0 !important;
-        width: auto !important;
         padding: 0 10px !important;
-    }
-    div[data-baseweb="input"] button:hover {
-        background-color: transparent !important;
+        width: auto !important;
+        box-shadow: none !important;
+        transform: none !important; /* Quitar elevación del botón principal */
     }
     div[data-baseweb="input"] button svg {
         fill: #6b7280 !important;
+    }
+    div[data-baseweb="input"] button:hover {
+        background-color: transparent !important;
+        color: #111827 !important; 
+        box-shadow: none !important;
     }
 
     .login-footer {
