@@ -51,10 +51,17 @@ st.markdown("""
         font-size: 0.8em;
         font-weight: 700;
         border: 1px solid #cce5ff;
+        display: inline-block;
+        margin-bottom: 4px;
     }
     .spot-highlight {
         color: #d93025;
         font-weight: 600;
+        font-size: 0.95em;
+    }
+    .meta-text {
+        font-size: 0.85em;
+        color: #666;
     }
     div[data-testid="stSidebar"] button {
         width: 100%;
@@ -64,9 +71,8 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (BOTÓN INTERACTIVO SEGURO) --- */
+    /* --- CSS LOGIN (BOTÓN INTERACTIVO) --- */
     
-    /* 1. Títulos */
     .login-header {
         font-size: 3rem;
         font-weight: 800;
@@ -84,7 +90,6 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* 2. TARJETA BLANCA */
     div[data-testid="stForm"] {
         background-color: #ffffff !important;
         padding: 40px;
@@ -93,19 +98,16 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. Textos Negros */
     div[data-testid="stForm"] label p, 
     div[data-testid="stForm"] h3,
     div[data-testid="stForm"] .stMarkdown p {
         color: #111827 !important;
     }
 
-    /* 4. Ocultar "Press Enter" */
     div[data-testid="InputInstructions"] {
         display: none !important;
     }
     
-    /* 5. Inputs */
     div[data-baseweb="input"] {
         background-color: #ffffff !important;
         border: 1px solid #d1d5db !important;
@@ -120,52 +122,36 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL - INTERACTIVO PERO SEGURO */
-    
-    /* ESTADO NORMAL */
-    div[data-testid="stForm"] button {
-        background-color: #2563eb !important; /* Azul Base */
-        color: #ffffff !important;            /* Texto Blanco */
+    /* BOTÓN PRINCIPAL */
+    div[data-testid="stForm"] .stButton > button {
+        background-color: #2563eb !important;
+        color: #ffffff !important;
         border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        transition: all 0.2s ease-in-out !important; /* Transición suave permitida */
         box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2) !important;
+        transition: all 0.2s ease !important;
     }
-
-    /* ESTADO HOVER (Pasar el mouse) - Feedback visual */
-    div[data-testid="stForm"] button:hover {
-        background-color: #1d4ed8 !important; /* Azul más oscuro */
-        color: #ffffff !important;            /* FORZAR BLANCO */
-        transform: translateY(-2px) !important; /* Se eleva un poco */
+    
+    div[data-testid="stForm"] .stButton > button:hover {
+        background-color: #1d4ed8 !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
         box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3) !important;
     }
 
-    /* ESTADO ACTIVE (Clic presionado) - Feedback de clic */
-    div[data-testid="stForm"] button:active {
-        background-color: #1e40af !important; /* Azul muy oscuro */
-        color: #ffffff !important;            /* FORZAR BLANCO */
-        transform: translateY(0) !important;    /* Se hunde */
-        box-shadow: none !important;
+    div[data-testid="stForm"] .stButton > button:active {
+        background-color: #1e40af !important;
+        transform: translateY(0);
     }
 
-    /* ESTADO FOCUS (Teclado) */
-    div[data-testid="stForm"] button:focus {
-        color: #ffffff !important;
-        outline: none !important;
-    }
-
-    /* Asegurar texto interno blanco siempre (párrafos dentro del botón) */
-    div[data-testid="stForm"] button p {
-        color: #ffffff !important;
-    }
-    div[data-testid="stForm"] button:hover p {
+    div[data-testid="stForm"] .stButton > button p {
         color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
+    /* BOTÓN OJO */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
@@ -174,15 +160,14 @@ st.markdown("""
         padding: 0 10px !important;
         width: auto !important;
         box-shadow: none !important;
-        transform: none !important; /* Quitar elevación del botón principal */
-    }
-    div[data-baseweb="input"] button svg {
-        fill: #6b7280 !important;
+        transform: none !important;
     }
     div[data-baseweb="input"] button:hover {
         background-color: transparent !important;
-        color: #111827 !important; 
-        box-shadow: none !important;
+        color: #111827 !important;
+    }
+    div[data-baseweb="input"] button svg {
+        fill: #6b7280 !important;
     }
 
     .login-footer {
@@ -197,7 +182,6 @@ st.markdown("""
 # --- 4. LOGIN ---
 def mostrar_login():
     c1, c2, c3 = st.columns([1, 0.8, 1])
-    
     with c2:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown("<div class='login-header'>Monitor Radio</div>", unsafe_allow_html=True)
@@ -235,12 +219,10 @@ if not st.session_state['logueado']:
 # DATOS Y DASHBOARD
 # ==============================================================================
 
-# --- 5. LÓGICA DE DATOS ---
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=10)
 def cargar_datos():
-    # ⚠️ TU ENLACE REAL
     url_hoja = "https://docs.google.com/spreadsheets/d/1ZCwGhzMl8TLQlDzg4AFMfni50rShkfhALqQkLWzK454/edit?gid=0#gid=0"
     try:
         data = conn.read(spreadsheet=url_hoja, worksheet=0)
@@ -267,7 +249,7 @@ def cargar_datos():
     except Exception as e:
         return None
 
-# --- 6. SIDEBAR ---
+# --- SIDEBAR ---
 with st.sidebar:
     usuario = st.session_state['usuario_actual']
     st.write(f"Hola, **{usuario}** 👋")
@@ -280,7 +262,7 @@ with st.sidebar:
         st.session_state['usuario_actual'] = None
         st.rerun()
 
-# --- 7. CARGA ---
+# --- CARGA ---
 df_raw = cargar_datos()
 if df_raw is None:
     st.error("⚠️ Error conectando a Google Sheets.")
@@ -295,7 +277,7 @@ if permisos != "TODOS":
     st.caption(f"Visualizando datos para: {', '.join(permisos)}")
 st.markdown("---")
 
-# --- 8. FILTROS ---
+# --- FILTROS ---
 c_filtros_1 = st.columns(4)
 min_date_avail = df_raw['FECHA'].min().date() if not df_raw.empty else datetime.date.today()
 max_date_avail = df_raw['FECHA'].max().date() if not df_raw.empty else datetime.date.today()
@@ -318,7 +300,7 @@ with c_filtros_2[0]:
 with c_filtros_2[1]:
     filtro_ciudades = st.multiselect("🏙️ Filtrar por Ciudad", lista_ciudades)
 
-# --- 9. APLICACIÓN DE FILTROS ---
+# --- APLICACIÓN DE FILTROS ---
 df = df_raw.copy()
 if f_inicio and f_fin:
     df = df[(df['FECHA'].dt.date >= f_inicio) & (df['FECHA'].dt.date <= f_fin)]
@@ -327,7 +309,7 @@ if filtro_estaciones:
 if filtro_ciudades:
     df = df[df['CIUDAD'].isin(filtro_ciudades)]
 
-# --- 10. KPIs ---
+# --- KPIs ---
 st.markdown("<br>", unsafe_allow_html=True)
 k1, k2, k3 = st.columns(3)
 k1.metric("Spots Totales", len(df))
@@ -337,7 +319,7 @@ prog_lider = df['PROGRAMA'].mode()[0] if not df.empty else "-"
 k3.metric("Top Programa", prog_lider)
 st.markdown("---")
 
-# --- 11. GRÁFICAS ---
+# --- GRÁFICAS ---
 if not df.empty:
     st.subheader("📊 Análisis Visual")
     g1, g2 = st.columns([1, 1.5])
@@ -383,7 +365,7 @@ if not df.empty:
         )
         st.altair_chart(area, use_container_width=True)
 
-# --- 12. BUSCADOR Y TABLA ---
+# --- TABLA Y EXPORTACIÓN ---
 st.markdown("---")
 busqueda_texto = st.text_input("🔍 Buscador Profundo: Filtra por contenido...", placeholder="Escribe aquí para buscar dentro de las transcripciones...")
 
@@ -392,36 +374,27 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- COLUMNAS (Texto: 2.2, Audio: 1.5) ---
-cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
-
-ancho_titulo = sum(cols_width[:8])
-ancho_boton = cols_width[8] + 0.5 
-
 c_feed_h, c_feed_b = st.columns([4, 1])
-
 with c_feed_h:
     st.subheader(f"📋 Feed de Resultados ({len(df_tabla)})")
-
 with c_feed_b:
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
         df_export = df_tabla.copy()
         df_export['FECHA'] = df_export['FECHA'].dt.strftime('%d/%m/%Y')
         df_export.to_excel(writer, sheet_name='Reporte', index=False)
-    
-    st.download_button(
-        "📥 Descargar Excel", 
-        buffer.getvalue(), 
-        f"Reporte_{datetime.date.today().strftime('%d-%m-%Y')}.xlsx", 
-        use_container_width=True
-    )
+    st.download_button("📥 Excel", buffer.getvalue(), f"Reporte_{datetime.date.today().strftime('%d-%m-%Y')}.xlsx", use_container_width=True)
 
-headers = ["📅 Fecha", "⏰ Hora", "🏙️ Ciudad", "📡 Estación", "🎙️ Programa", "🏷️ Spot", "📝 Texto", "▶️ Audio", "🔗"]
+# --- ENCABEZADOS AGRUPADOS (V26 RESPONSIVE) ---
+# Usamos 4 columnas grandes en lugar de 9 pequeñas para que en móvil se agrupen en bloques legibles
+cols_width = [1.2, 1.8, 3.0, 1.5] # Proporciones: Datos | Fuente | Texto | Evidencia
+headers = ["📅 Cuándo / Dónde", "📡 Emisora / Spot", "📝 Mensaje Detectado", "▶️ Evidencia"]
+
+st.markdown("<hr style='margin: 5px 0; border-top: 2px solid #ddd;'>", unsafe_allow_html=True)
 h_cols = st.columns(cols_width)
 for i, h in enumerate(headers):
     h_cols[i].markdown(f"**{h}**")
-st.markdown("<hr style='margin: 5px 0; border-top: 2px solid #ddd;'>", unsafe_allow_html=True)
+st.markdown("<hr style='margin: 5px 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
 
 asc = True if direccion == "Ascendente" else False
 if criterio == "Fecha/Hora": df_tabla = df_tabla.sort_values(by=['FECHA', 'HORA'], ascending=asc)
@@ -440,30 +413,40 @@ if not df_tabla.empty:
         txt_full = str(row.get('TEXTO_FULL', ''))
         keywords = str(row.get('KEYWORDS', ''))
         link = str(row.get('LINK', ''))
-        txt_short = (txt_full[:60] + '...') if len(txt_full) > 60 else txt_full
+        txt_short = (txt_full[:70] + '...') if len(txt_full) > 70 else txt_full
 
+        # --- ESTRUCTURA DE 4 COLUMNAS (Responsive Friendly) ---
         c = st.columns(cols_width)
-        c[0].write(fecha)
-        c[1].write(hora)
-        c[2].write(ciudad)
-        c[3].markdown(f"**{est}**<br><span class='badge-freq'>{freq}</span>", unsafe_allow_html=True)
-        c[4].caption(prog)
-        c[5].markdown(f"<span class='spot-highlight'>{spot}</span>", unsafe_allow_html=True)
         
-        with c[6]:
+        # 1. DATOS (Cuándo/Dónde)
+        with c[0]:
+            st.markdown(f"**{fecha}**")
+            st.markdown(f"<div class='meta-text'>⏰ {hora}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='meta-text'>📍 {ciudad}</div>", unsafe_allow_html=True)
+
+        # 2. FUENTE (Quién)
+        with c[1]:
+            st.markdown(f"<span class='badge-freq'>{est} ({freq})</span>", unsafe_allow_html=True)
+            st.caption(f"{prog}")
+            st.markdown(f"<span class='spot-highlight'>{spot}</span>", unsafe_allow_html=True)
+
+        # 3. TEXTO (Qué)
+        with c[2]:
             with st.expander(txt_short):
-                st.markdown(f"**Transcripción Completa:**")
+                st.markdown(f"**Transcripción:**")
                 st.write(txt_full)
                 if keywords:
                     st.divider()
-                    st.info(f"🔑 **Keywords:** {keywords}")
-        
-        with c[7]:
-            if link.startswith("http"): st.audio(link)
-        
-        with c[8]:
-            if link.startswith("http"): st.link_button("🔗", link)
-            
-        st.markdown("<hr style='margin: 0; opacity: 0.2;'>", unsafe_allow_html=True)
+                    st.info(f"🔑 {keywords}")
+
+        # 4. MEDIA (Evidencia)
+        with c[3]:
+            if link.startswith("http"):
+                st.audio(link)
+                st.link_button("🔗 Abrir", link, use_container_width=True)
+            else:
+                st.caption("No disponible")
+
+        st.markdown("<hr style='margin: 0; opacity: 0.1;'>", unsafe_allow_html=True)
 else:
     st.info("No se encontraron resultados con los filtros actuales.")
