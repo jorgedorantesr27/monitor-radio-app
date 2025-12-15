@@ -39,10 +39,10 @@ if 'logueado' not in st.session_state:
 if 'usuario_actual' not in st.session_state:
     st.session_state['usuario_actual'] = None
 
-# --- 3. ESTILOS CSS ---
+# --- 3. ESTILOS CSS (CORRECCIÓN VISUAL LOGIN) ---
 st.markdown("""
     <style>
-    /* Estilos Generales */
+    /* Estilos Generales Dashboard */
     .badge-freq {
         background-color: #e6f3ff;
         color: #0068c9;
@@ -64,103 +64,118 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS ESPECÍFICO PARA ARREGLAR EL LOGIN --- */
+    /* --- CSS LOGIN (FIX DEFINITIVO) --- */
     
-    /* 1. Títulos fuera de la tarjeta (Blancos/Grises para contrastar con el fondo oscuro de la app) */
+    /* 1. Fondo general del login (Opcional, para dar contexto si el usuario usa dark mode) */
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 2. Títulos FUERA de la tarjeta (Blancos para contrastar con el fondo oscuro de la app) */
     .login-header {
-        font-size: 2.5rem;
+        font-size: 3rem;
         font-weight: 800;
         color: #ffffff; 
         text-align: center;
         margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        text-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
     .login-sub {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         color: #e5e7eb;
         text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 300;
+        margin-bottom: 3rem;
+        font-weight: 400;
+        letter-spacing: 1px;
     }
 
-    /* 2. La Tarjeta Blanca */
+    /* 3. LA TARJETA BLANCA (Forzada) */
     div[data-testid="stForm"] {
-        background-color: #ffffff !important;
-        padding: 3rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        background-color: #ffffff !important; /* Blanco puro */
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. FUERZA BRUTA: Todo texto dentro del formulario debe ser NEGRO OSCURO */
-    div[data-testid="stForm"] label,
-    div[data-testid="stForm"] p,
-    div[data-testid="stForm"] h1,
-    div[data-testid="stForm"] h2,
-    div[data-testid="stForm"] h3,
-    div[data-testid="stForm"] div {
-        color: #111827 !important; /* Gris casi negro */
+    /* 4. TEXTOS DENTRO DE LA TARJETA (NEGROS) */
+    /* Forzamos a negro todas las etiquetas, títulos y párrafos dentro del form */
+    div[data-testid="stForm"] * {
+        color: #111827 !important; /* Negro casi puro */
     }
 
-    /* 4. Inputs (Cajas de texto) */
-    div[data-baseweb="input"] > div {
-        background-color: #f3f4f6 !important; /* Gris muy claro de fondo */
-        border: 1px solid #d1d5db !important;
+    /* 5. ARREGLO DEL INPUT (Texto encimado) */
+    /* Esto OCULTA el texto "Press Enter to submit" para que no choque con el ojo */
+    div[data-testid="InputInstructions"] {
+        display: none !important;
     }
     
-    /* 5. El texto que escribe el usuario dentro del input */
+    /* 6. ESTILO DE LOS CAMPOS (INPUTS) */
+    div[data-baseweb="input"] {
+        background-color: #ffffff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+    }
+    div[data-baseweb="input"] > div {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    /* Texto que escribe el usuario */
     input[type="text"], input[type="password"] {
-        color: #000000 !important; /* NEGRO PURO */
-        -webkit-text-fill-color: #000000 !important;
-        caret-color: #000000 !important; /* Cursor negro */
+        color: #000000 !important;
+        caret-color: #000000 !important;
     }
 
-    /* 6. Botón de Entrar */
+    /* 7. BOTÓN */
     div[data-testid="stForm"] button {
-        background-color: #2563eb !important;
-        color: white !important;
+        background-color: #2563eb !important; /* Azul */
         border: none !important;
-        padding: 0.6rem 1rem !important;
-        font-size: 1.1rem !important;
+        padding: 12px !important;
+        border-radius: 6px !important;
+        margin-top: 15px;
+    }
+    /* Texto del botón (Blanco) - Sobrescribe la regla 4 */
+    div[data-testid="stForm"] button p {
+        color: #ffffff !important;
         font-weight: 600 !important;
-        border-radius: 8px !important;
-        margin-top: 10px;
+        font-size: 16px !important;
     }
     div[data-testid="stForm"] button:hover {
         background-color: #1d4ed8 !important;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
-    div[data-testid="stForm"] button p {
-        color: white !important; /* Texto del botón blanco */
-    }
-
-    /* Pie de página */
+    
     .login-footer {
         text-align: center;
         color: #9ca3af;
         font-size: 0.8em;
-        margin-top: 25px;
+        margin-top: 40px;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # --- 4. LOGIN ---
 def mostrar_login():
+    # Centrado usando columnas
     c1, c2, c3 = st.columns([1, 0.8, 1])
     
     with c2:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        st.markdown("<br><br>", unsafe_allow_html=True)
         
-        # TÍTULOS (Ahora dice Monitoreo de Spots)
-        st.markdown("<div class='login-header'>Monitoreo de Spots</div>", unsafe_allow_html=True)
+        # Títulos
+        st.markdown("<div class='login-header'>Monitor Radio</div>", unsafe_allow_html=True)
         st.markdown("<div class='login-sub'>Intelligence Dashboard</div>", unsafe_allow_html=True)
         
-        # FORMULARIO TARJETA
+        # Tarjeta de Login
         with st.form("login_form"):
             st.markdown("### Acceso de Clientes")
             st.caption("Ingresa tus credenciales para continuar")
             
+            st.markdown("<br>", unsafe_allow_html=True)
+            
             usuario = st.text_input("Usuario", placeholder="Usuario asignado")
+            # El input de contraseña ya no tendrá el texto encimado gracias al CSS
             password = st.text_input("Contraseña", type="password", placeholder="••••••••")
             
             st.markdown("<br>", unsafe_allow_html=True)
@@ -242,7 +257,7 @@ permisos = PERMISOS.get(usuario, [])
 if permisos != "TODOS":
     df_raw = df_raw[df_raw['SPOT'].isin(permisos)]
 
-st.title("Monitoreo de Spots") # CAMBIO DE TÍTULO INTERNO TAMBIÉN
+st.title("Monitoreo de Spots")
 if permisos != "TODOS":
     st.caption(f"Visualizando datos para: {', '.join(permisos)}")
 st.markdown("---")
