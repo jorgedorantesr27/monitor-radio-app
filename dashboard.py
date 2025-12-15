@@ -18,7 +18,7 @@ else:
 st.set_page_config(
     page_title="Monitoreo de Spots",
     layout="wide",
-    initial_sidebar_state="collapsed" # <--- Barra lateral oculta al inicio
+    initial_sidebar_state="collapsed"
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (FIX DEFINITIVO HOVER) --- */
+    /* --- CSS LOGIN (BOTÓN ESTÁTICO) --- */
     
     /* 1. Títulos */
     .login-header {
@@ -120,41 +120,27 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL - SOLUCIÓN NUCLEAR PARA EL HOVER */
+    /* 6. BOTÓN PRINCIPAL - ESTILO ÚNICO Y FIJO */
+    /* Aplicamos el mismo estilo para normal, hover, active y focus */
     
-    /* ESTADO NORMAL */
-    div[data-testid="stForm"] .stButton > button {
-        background-color: #2563eb !important; /* Azul */
-        border: 1px solid #2563eb !important;
-        color: #ffffff !important; /* Texto Blanco */
+    div[data-testid="stForm"] .stButton > button,
+    div[data-testid="stForm"] .stButton > button:hover,
+    div[data-testid="stForm"] .stButton > button:active,
+    div[data-testid="stForm"] .stButton > button:focus {
+        background-color: #2563eb !important; /* AZUL SIEMPRE */
+        border: none !important;
+        color: #ffffff !important; /* TEXTO BLANCO SIEMPRE */
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
+        box-shadow: none !important; /* Sin sombras */
+        transition: none !important; /* Sin animaciones */
+        outline: none !important;
     }
 
-    /* ESTADO HOVER (Ratón encima) - FORZAMOS LOS COLORES */
-    div[data-testid="stForm"] .stButton > button:hover {
-        background-color: #1d4ed8 !important; /* Azul un poco más oscuro */
-        border-color: #1d4ed8 !important;
-        color: #ffffff !important; /* MANTENER TEXTO BLANCO */
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    /* ESTADO FOCUS/ACTIVE (Clic) */
-    div[data-testid="stForm"] .stButton > button:active,
-    div[data-testid="stForm"] .stButton > button:focus {
-        background-color: #1e40af !important;
-        border-color: #1e40af !important;
-        color: #ffffff !important;
-        box-shadow: none !important;
-    }
-
-    /* FORZAR TEXTO INTERNO DEL BOTÓN (El <p> dentro del botón) */
-    div[data-testid="stForm"] .stButton > button p {
-        color: #ffffff !important;
-    }
-    /* Asegurar que al pasar el mouse el texto SIGA siendo blanco */
+    /* Asegurar texto interno blanco siempre */
+    div[data-testid="stForm"] .stButton > button p,
     div[data-testid="stForm"] .stButton > button:hover p {
         color: #ffffff !important;
     }
@@ -384,10 +370,8 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- COLUMNAS (Ajuste Equilibrado) ---
-# Texto (Index 6): 2.0 (Espacio cómodo para leer)
-# Audio (Index 7): 1.5 (Espacio suficiente para el player)
-cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.0, 1.5, 0.4]
+# --- COLUMNAS (Texto: 2.2, Audio: 1.5) ---
+cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
 ancho_boton = cols_width[8] + 0.5 
