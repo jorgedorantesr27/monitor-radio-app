@@ -19,7 +19,7 @@ st.set_page_config(
     page_title="Monitor Radio Intelligence",
     page_icon="📻",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed" # Colapsado por defecto para el login
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -40,9 +40,10 @@ if 'logueado' not in st.session_state:
 if 'usuario_actual' not in st.session_state:
     st.session_state['usuario_actual'] = None
 
-# --- 3. ESTILOS CSS ---
+# --- 3. ESTILOS CSS PROFESIONALES ---
 st.markdown("""
     <style>
+    /* 1. Estilos Generales de la App */
     .badge-freq {
         background-color: #e6f3ff;
         color: #0068c9;
@@ -56,54 +57,120 @@ st.markdown("""
         color: #d93025;
         font-weight: 600;
     }
-    .login-box {
-        padding: 2rem;
-        border-radius: 10px;
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        text-align: center;
-    }
-    div[data-testid="stSidebar"] button {
-        width: 100%;
-    }
     .streamlit-expanderHeader {
         font-size: 0.9em;
         padding: 0px !important;
     }
+    div[data-testid="stSidebar"] button {
+        width: 100%;
+    }
+
+    /* 2. ESTILOS EXCLUSIVOS DEL LOGIN */
+    /* Ocultar elementos extraños durante el login si se desea un look limpio */
+    .login-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .login-sub {
+        font-size: 1rem;
+        color: #6b7280;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    /* Contenedor simulado de tarjeta */
+    div[data-testid="stForm"] {
+        background-color: white;
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        border: 1px solid #e5e7eb;
+    }
+    
+    /* Inputs más bonitos */
+    div[data-baseweb="input"] > div {
+        border-radius: 8px !important;
+        background-color: #f9fafb !important;
+    }
+    
+    /* Botón de Entrar más atractivo */
+    div[data-testid="stForm"] button {
+        background-color: #2563eb !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease;
+    }
+    div[data-testid="stForm"] button:hover {
+        background-color: #1d4ed8 !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIN ---
+# --- 4. LOGIN MEJORADO (CON DISEÑO) ---
 def mostrar_login():
-    c1, c2, c3 = st.columns([1, 2, 1])
-    with c2:
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        st.markdown("<div class='login-box'><h2>🔐 Iniciar Sesión</h2></div>", unsafe_allow_html=True)
-        usuario = st.text_input("Usuario")
-        password = st.text_input("Contraseña", type="password")
-        if st.button("Entrar", type="primary", use_container_width=True):
-            if usuario in USUARIOS and USUARIOS[usuario] == password:
-                st.session_state['logueado'] = True
-                st.session_state['usuario_actual'] = usuario
-                st.success("¡Bienvenido!")
-                time.sleep(1)
-                st.rerun()
-            else:
-                st.error("Usuario o contraseña incorrectos")
+    # Usamos columnas para centrar la tarjeta
+    # [1, 0.8, 1] significa que la columna del medio es más estrecha (tipo móvil/tarjeta)
+    col1, col2, col3 = st.columns([1, 0.8, 1])
+    
+    with col2:
+        st.markdown("<br><br><br>", unsafe_allow_html=True) # Espacio superior
+        
+        # Encabezado fuera del formulario
+        st.markdown("<div class='login-header'>📻 Monitor Radio</div>", unsafe_allow_html=True)
+        st.markdown("<div class='login-sub'>Intelligence Dashboard</div>", unsafe_allow_html=True)
+        
+        # Formulario encapsulado (Permite dar Enter para enviar)
+        with st.form("login_form"):
+            st.markdown("##### Acceso de Clientes")
+            usuario = st.text_input("Usuario", placeholder="Ingresa tu usuario")
+            password = st.text_input("Contraseña", type="password", placeholder="••••••••")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Botón de envío
+            submitted = st.form_submit_button("Ingresar al Sistema", use_container_width=True)
+            
+            if submitted:
+                if usuario in USUARIOS and USUARIOS[usuario] == password:
+                    st.session_state['logueado'] = True
+                    st.session_state['usuario_actual'] = usuario
+                    st.success("✅ Acceso concedido")
+                    time.sleep(0.5)
+                    st.rerun()
+                else:
+                    st.error("❌ Usuario o contraseña incorrectos")
+
+        # Pie de página discreto
+        st.markdown("""
+            <div style='text-align: center; color: #9ca3af; font-size: 0.8em; margin-top: 20px;'>
+                &copy; 2025 Media Intelligence System
+            </div>
+        """, unsafe_allow_html=True)
 
 if not st.session_state['logueado']:
     mostrar_login()
     st.stop()
+
+# ==============================================================================
+# A PARTIR DE AQUÍ, TODO ES IGUAL A LA VERSIÓN ANTERIOR
+# (Lógica de datos, Dashboard, Tablas, etc.)
+# ==============================================================================
 
 # --- 5. LÓGICA DE DATOS ---
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 @st.cache_data(ttl=10)
 def cargar_datos():
-    # ---------------------------------------------------------
     # ⚠️ TU ENLACE REAL
     url_hoja = "https://docs.google.com/spreadsheets/d/1ZCwGhzMl8TLQlDzg4AFMfni50rShkfhALqQkLWzK454/edit?gid=0#gid=0"
-    # ---------------------------------------------------------
     try:
         data = conn.read(spreadsheet=url_hoja, worksheet=0)
         data.columns = data.columns.str.strip()
@@ -129,7 +196,7 @@ def cargar_datos():
     except Exception as e:
         return None
 
-# --- 6. SIDEBAR ---
+# --- 6. SIDEBAR (Solo visible si está logueado) ---
 with st.sidebar:
     usuario = st.session_state['usuario_actual']
     st.write(f"Hola, **{usuario}** 👋")
@@ -142,7 +209,7 @@ with st.sidebar:
         st.session_state['usuario_actual'] = None
         st.rerun()
 
-# --- 7. CARGA INICIAL ---
+# --- 7. CARGA Y FILTROS INICIALES ---
 df_raw = cargar_datos()
 if df_raw is None:
     st.error("⚠️ Error conectando a Google Sheets.")
@@ -158,8 +225,6 @@ if permisos != "TODOS":
 st.markdown("---")
 
 # --- 8. FILTROS ---
-
-# FILA 1
 c_filtros_1 = st.columns(4)
 min_date_avail = df_raw['FECHA'].min().date() if not df_raw.empty else datetime.date.today()
 max_date_avail = df_raw['FECHA'].max().date() if not df_raw.empty else datetime.date.today()
@@ -173,7 +238,6 @@ with c_filtros_1[2]:
 with c_filtros_1[3]:
     direccion = st.selectbox("Orden", ["Descendente", "Ascendente"])
 
-# FILA 2 (Multiselect)
 c_filtros_2 = st.columns(2)
 lista_estaciones = sorted(df_raw['ESTACION'].dropna().unique().tolist()) if not df_raw.empty else []
 lista_ciudades = sorted(df_raw['CIUDAD'].dropna().unique().tolist()) if not df_raw.empty else []
@@ -202,7 +266,7 @@ prog_lider = df['PROGRAMA'].mode()[0] if not df.empty else "-"
 k3.metric("Top Programa", prog_lider)
 st.markdown("---")
 
-# --- 11. GRÁFICAS (MODIFICADAS CON ETIQUETAS) ---
+# --- 11. GRÁFICAS ---
 if not df.empty:
     st.subheader("📊 Análisis Visual")
     g1, g2 = st.columns([1, 1.5])
@@ -220,22 +284,15 @@ if not df.empty:
         st.caption("🏆 Top 10 Programas")
         df_prog = df['PROGRAMA'].value_counts().head(10).reset_index()
         df_prog.columns = ['Programa', 'Spots']
-        
-        # --- AQUÍ ESTÁ EL TRUCO DE LA ETIQUETA ---
-        # Creamos una columna que sea "Nombre (5)"
         df_prog['Etiqueta'] = df_prog['Programa'].str.slice(0, 25) + " (" + df_prog['Spots'].astype(str) + ")"
         
         bar = alt.Chart(df_prog).mark_bar().encode(
             x='Spots', 
-            # Usamos la etiqueta combinada en el Eje Y
             y=alt.Y('Etiqueta', sort='-x', title=None),
             color=alt.Color('Programa', legend=None), 
             tooltip=['Programa', 'Spots']
         )
-        
-        # También ponemos el número al final de la barra para que se vea claro
         text = bar.mark_text(align='left', dx=2).encode(text='Spots')
-        
         st.altair_chart(bar + text, use_container_width=True)
 
     t1, t2 = st.columns(2)
@@ -257,7 +314,6 @@ if not df.empty:
 
 # --- 12. BUSCADOR Y TABLA ---
 st.markdown("---")
-
 busqueda_texto = st.text_input("🔍 Buscador Profundo: Filtra por contenido...", placeholder="Escribe aquí para buscar dentro de las transcripciones...")
 
 if busqueda_texto:
@@ -288,7 +344,7 @@ with c_feed_b:
         use_container_width=True
     )
 
-# Encabezados
+# Encabezados y Tabla
 headers = ["📅 Fecha", "⏰ Hora", "🏙️ Ciudad", "📡 Estación", "🎙️ Programa", "🏷️ Spot", "📝 Texto", "▶️ Audio", "🔗"]
 h_cols = st.columns(cols_width)
 for i, h in enumerate(headers):
