@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (CORRECCIÓN BOTÓN) --- */
+    /* --- CSS LOGIN CORREGIDO (V19) --- */
     
     /* 1. Títulos FUERA de la tarjeta */
     .login-header {
@@ -93,11 +93,11 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. TEXTOS GENERALES (Etiquetas, Títulos) en NEGRO */
+    /* 3. TEXTOS NEGROS (Solución Selectiva) */
+    /* Solo aplicamos negro a etiquetas y textos Markdown, NO a todo (*) */
+    div[data-testid="stForm"] label p, 
     div[data-testid="stForm"] h3,
-    div[data-testid="stForm"] label,
-    div[data-testid="stForm"] span,
-    div[data-testid="stForm"] div.stMarkdown p {
+    div[data-testid="stForm"] .stMarkdown p {
         color: #111827 !important;
     }
 
@@ -106,7 +106,7 @@ st.markdown("""
         display: none !important;
     }
     
-    /* 5. Inputs */
+    /* 5. Inputs (Cajas de Texto) */
     div[data-baseweb="input"] {
         background-color: #ffffff !important;
         border: 1px solid #d1d5db !important;
@@ -121,43 +121,43 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL (INGRESAR) - CORRECCIÓN CRÍTICA */
-    div[data-testid="stForm"] > button {
-        background-color: #2563eb !important; /* Azul Brillante */
+    /* 6. BOTÓN PRINCIPAL (INGRESAR) - SOLUCIÓN DEFINITIVA */
+    /* Apuntamos específicamente al botón dentro del formulario */
+    div[data-testid="stForm"] .stButton > button {
+        background-color: #2563eb !important; /* Azul */
         border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        color: #ffffff !important; /* Texto blanco forzado al contenedor */
+        color: #ffffff !important; /* Texto BLANCO forzado */
     }
     
-    /* Forzar texto blanco dentro del botón (párrafos y divs internos) */
-    div[data-testid="stForm"] > button * {
+    /* Aseguramos que el texto interno (párrafo) también sea blanco */
+    div[data-testid="stForm"] .stButton > button p {
         color: #ffffff !important; 
         font-weight: 600 !important;
         font-size: 16px !important;
     }
     
-    div[data-testid="stForm"] > button:hover {
-        background-color: #1d4ed8 !important; /* Azul más oscuro al pasar mouse */
+    /* Efecto Hover */
+    div[data-testid="stForm"] .stButton > button:hover {
+        background-color: #1d4ed8 !important;
+        color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - Mantener limpio */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
+        color: #6b7280 !important;
         margin-top: 0 !important;
         padding: 0 10px !important;
         width: auto !important;
         box-shadow: none !important;
     }
-    /* Icono del ojo en gris */
     div[data-baseweb="input"] button svg {
         fill: #6b7280 !important;
-    }
-    div[data-baseweb="input"] button:hover {
-        background-color: transparent !important;
     }
 
     .login-footer {
@@ -188,6 +188,7 @@ def mostrar_login():
             
             st.markdown("<br>", unsafe_allow_html=True)
             
+            # Nota: Streamlit usa stButton internamente
             submitted = st.form_submit_button("Ingresar al Sistema", use_container_width=True)
             
             if submitted:
@@ -367,9 +368,9 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- AJUSTE FINAL DE COLUMNAS ---
-# Texto (Index 6) aumentado a 2.2 para que se lea mejor el preview
-# Audio (Index 7) reducido a 1.5 para equilibrar
+# --- COLUMNAS (Ajustadas V18.0) ---
+# Texto (Index 6): 2.2
+# Audio (Index 7): 1.5
 cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
