@@ -18,7 +18,7 @@ else:
 st.set_page_config(
     page_title="Monitoreo de Spots",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"  # <--- CAMBIO: Sidebar oculta al inicio
 )
 
 # --- 2. GESTIÓN DE USUARIOS (LOGIN) ---
@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN CORREGIDO (V19) --- */
+    /* --- CSS LOGIN (V20 - FIX HOVER) --- */
     
     /* 1. Títulos FUERA de la tarjeta */
     .login-header {
@@ -94,19 +94,18 @@ st.markdown("""
     }
 
     /* 3. TEXTOS NEGROS (Solución Selectiva) */
-    /* Solo aplicamos negro a etiquetas y textos Markdown, NO a todo (*) */
     div[data-testid="stForm"] label p, 
     div[data-testid="stForm"] h3,
     div[data-testid="stForm"] .stMarkdown p {
         color: #111827 !important;
     }
 
-    /* 4. ARREGLO DEL INPUT PASSWORD (Ocultar "Press Enter") */
+    /* 4. ARREGLO DEL INPUT PASSWORD */
     div[data-testid="InputInstructions"] {
         display: none !important;
     }
     
-    /* 5. Inputs (Cajas de Texto) */
+    /* 5. Inputs */
     div[data-baseweb="input"] {
         background-color: #ffffff !important;
         border: 1px solid #d1d5db !important;
@@ -121,8 +120,9 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL (INGRESAR) - SOLUCIÓN DEFINITIVA */
-    /* Apuntamos específicamente al botón dentro del formulario */
+    /* 6. BOTÓN PRINCIPAL (INGRESAR) - ESTADOS DE MOUSE */
+    
+    /* Estado NORMAL */
     div[data-testid="stForm"] .stButton > button {
         background-color: #2563eb !important; /* Azul */
         border: none !important;
@@ -130,23 +130,35 @@ st.markdown("""
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
-        color: #ffffff !important; /* Texto BLANCO forzado */
+        color: #ffffff !important;
     }
-    
-    /* Aseguramos que el texto interno (párrafo) también sea blanco */
     div[data-testid="stForm"] .stButton > button p {
         color: #ffffff !important; 
         font-weight: 600 !important;
         font-size: 16px !important;
     }
     
-    /* Efecto Hover */
+    /* Estado HOVER (Pasar mouse) - SOLUCIÓN AQUÍ */
     div[data-testid="stForm"] .stButton > button:hover {
-        background-color: #1d4ed8 !important;
+        background-color: #1d4ed8 !important; /* Azul más oscuro */
+        border: none !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    /* Forzamos el texto a blanco también en hover */
+    div[data-testid="stForm"] .stButton > button:hover p {
         color: #ffffff !important;
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
+    /* Estado ACTIVE (Clic) */
+    div[data-testid="stForm"] .stButton > button:active, 
+    div[data-testid="stForm"] .stButton > button:focus {
+        background-color: #1e40af !important; /* Azul muy oscuro */
+        color: #ffffff !important;
+        border: none !important;
+    }
+
+    /* 7. BOTÓN "VER CONTRASEÑA" */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
@@ -188,7 +200,6 @@ def mostrar_login():
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Nota: Streamlit usa stButton internamente
             submitted = st.form_submit_button("Ingresar al Sistema", use_container_width=True)
             
             if submitted:
@@ -368,9 +379,6 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- COLUMNAS (Ajustadas V18.0) ---
-# Texto (Index 6): 2.2
-# Audio (Index 7): 1.5
 cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
