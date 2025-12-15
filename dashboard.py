@@ -39,7 +39,7 @@ if 'logueado' not in st.session_state:
 if 'usuario_actual' not in st.session_state:
     st.session_state['usuario_actual'] = None
 
-# --- 3. ESTILOS CSS (CORRECCIÓN VISUAL LOGIN) ---
+# --- 3. ESTILOS CSS ---
 st.markdown("""
     <style>
     /* Estilos Generales Dashboard */
@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN (FIX BOTÓN OJO) --- */
+    /* --- CSS LOGIN CORREGIDO --- */
     
     /* 1. Títulos FUERA de la tarjeta */
     .login-header {
@@ -93,14 +93,18 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. Textos generales dentro de la tarjeta (Negro) */
-    div[data-testid="stForm"] * {
+    /* 3. TEXTOS NEGROS (CORREGIDO) */
+    /* Solo aplicamos negro a etiquetas y títulos, NO a los botones para evitar que se pongan negros */
+    div[data-testid="stForm"] h3,
+    div[data-testid="stForm"] label,
+    div[data-testid="stForm"] span,
+    div[data-testid="stForm"] div.stMarkdown p {
         color: #111827 !important;
     }
 
-    /* 4. ARREGLO DEL INPUT PASSWORD */
+    /* 4. ARREGLO DEL INPUT PASSWORD (Ocultar "Press Enter") */
     div[data-testid="InputInstructions"] {
-        display: none !important; /* Oculta "Press Enter to submit" */
+        display: none !important;
     }
     
     /* 5. Inputs */
@@ -118,17 +122,18 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL (INGRESAR) - Azul y Grande */
+    /* 6. BOTÓN PRINCIPAL (INGRESAR) - CORREGIDO */
     div[data-testid="stForm"] > button {
-        background-color: #2563eb !important;
+        background-color: #2563eb !important; /* Azul */
         border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
     }
+    /* Forzamos el texto del botón a BLANCO explícitamente */
     div[data-testid="stForm"] > button p {
-        color: #ffffff !important;
+        color: #ffffff !important; 
         font-weight: 600 !important;
         font-size: 16px !important;
     }
@@ -136,12 +141,11 @@ st.markdown("""
         background-color: #1d4ed8 !important;
     }
 
-    /* 7. REPARACIÓN DEL BOTÓN "VER CONTRASEÑA" (OJO) */
-    /* Esto es lo nuevo: Le quitamos el estilo azul para que se vea normal */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
-        color: #6b7280 !important; /* Gris oscuro para el ícono */
+        color: #6b7280 !important;
         margin-top: 0 !important;
         padding: 0 10px !important;
         width: auto !important;
@@ -149,7 +153,7 @@ st.markdown("""
     }
     div[data-baseweb="input"] button:hover {
         background-color: transparent !important;
-        color: #111827 !important; /* Negro al pasar el mouse */
+        color: #111827 !important;
     }
     div[data-baseweb="input"] svg {
         fill: #6b7280 !important;
@@ -170,15 +174,12 @@ def mostrar_login():
     
     with c2:
         st.markdown("<br><br>", unsafe_allow_html=True)
-        
-        st.markdown("<div class='login-header'>Monitoreo de Spots</div>", unsafe_allow_html=True)
+        st.markdown("<div class='login-header'>Monitor Radio</div>", unsafe_allow_html=True)
         st.markdown("<div class='login-sub'>Intelligence Dashboard</div>", unsafe_allow_html=True)
         
         with st.form("login_form"):
-            # CAMBIO DE TEXTO AQUÍ
             st.markdown("### Acceso a Cliente")
             st.caption("Ingresa tus credenciales para continuar")
-            
             st.markdown("<br>", unsafe_allow_html=True)
             
             usuario = st.text_input("Usuario", placeholder="Usuario asignado")
@@ -365,7 +366,11 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.7, 1.2, 0.4]
+# --- AJUSTE DE COLUMNAS SOLICITADO ---
+# Texto (Index 6) reducido de 2.7 -> 1.5
+# Audio (Index 7) aumentado de 1.2 -> 2.5
+cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 1.5, 2.5, 0.4]
+
 ancho_titulo = sum(cols_width[:8])
 ancho_boton = cols_width[8] + 0.5 
 
@@ -388,7 +393,7 @@ with c_feed_b:
         use_container_width=True
     )
 
-headers = ["Fecha", "Hora", "Ciudad", "Estación", "Programa", "Spot", "Texto", "Audio", "🔗"]
+headers = ["📅 Fecha", "⏰ Hora", "🏙️ Ciudad", "📡 Estación", "🎙️ Programa", "🏷️ Spot", "📝 Texto", "▶️ Audio", "🔗"]
 h_cols = st.columns(cols_width)
 for i, h in enumerate(headers):
     h_cols[i].markdown(f"**{h}**")
