@@ -64,7 +64,7 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* --- CSS LOGIN CORREGIDO --- */
+    /* --- CSS LOGIN (CORRECCIÓN BOTÓN) --- */
     
     /* 1. Títulos FUERA de la tarjeta */
     .login-header {
@@ -93,8 +93,7 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* 3. TEXTOS NEGROS (CORREGIDO) */
-    /* Solo aplicamos negro a etiquetas y títulos, NO a los botones para evitar que se pongan negros */
+    /* 3. TEXTOS GENERALES (Etiquetas, Títulos) en NEGRO */
     div[data-testid="stForm"] h3,
     div[data-testid="stForm"] label,
     div[data-testid="stForm"] span,
@@ -122,41 +121,43 @@ st.markdown("""
         caret-color: #000000 !important;
     }
 
-    /* 6. BOTÓN PRINCIPAL (INGRESAR) - CORREGIDO */
+    /* 6. BOTÓN PRINCIPAL (INGRESAR) - CORRECCIÓN CRÍTICA */
     div[data-testid="stForm"] > button {
-        background-color: #2563eb !important; /* Azul */
+        background-color: #2563eb !important; /* Azul Brillante */
         border: none !important;
         padding: 12px !important;
         border-radius: 6px !important;
         margin-top: 15px;
         width: 100%;
+        color: #ffffff !important; /* Texto blanco forzado al contenedor */
     }
-    /* Forzamos el texto del botón a BLANCO explícitamente */
-    div[data-testid="stForm"] > button p {
+    
+    /* Forzar texto blanco dentro del botón (párrafos y divs internos) */
+    div[data-testid="stForm"] > button * {
         color: #ffffff !important; 
         font-weight: 600 !important;
         font-size: 16px !important;
     }
+    
     div[data-testid="stForm"] > button:hover {
-        background-color: #1d4ed8 !important;
+        background-color: #1d4ed8 !important; /* Azul más oscuro al pasar mouse */
     }
 
-    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) */
+    /* 7. BOTÓN "VER CONTRASEÑA" (OJO) - Mantener limpio */
     div[data-baseweb="input"] button {
         background-color: transparent !important;
         border: none !important;
-        color: #6b7280 !important;
         margin-top: 0 !important;
         padding: 0 10px !important;
         width: auto !important;
         box-shadow: none !important;
     }
+    /* Icono del ojo en gris */
+    div[data-baseweb="input"] button svg {
+        fill: #6b7280 !important;
+    }
     div[data-baseweb="input"] button:hover {
         background-color: transparent !important;
-        color: #111827 !important;
-    }
-    div[data-baseweb="input"] svg {
-        fill: #6b7280 !important;
     }
 
     .login-footer {
@@ -366,10 +367,10 @@ if busqueda_texto:
 else:
     df_tabla = df
 
-# --- AJUSTE DE COLUMNAS SOLICITADO ---
-# Texto (Index 6) reducido de 2.7 -> 1.5
-# Audio (Index 7) aumentado de 1.2 -> 2.5
-cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 1.5, 2.5, 0.4]
+# --- AJUSTE FINAL DE COLUMNAS ---
+# Texto (Index 6) aumentado a 2.2 para que se lea mejor el preview
+# Audio (Index 7) reducido a 1.5 para equilibrar
+cols_width = [0.7, 0.5, 0.7, 1.0, 1.0, 1.2, 2.2, 1.5, 0.4]
 
 ancho_titulo = sum(cols_width[:8])
 ancho_boton = cols_width[8] + 0.5 
